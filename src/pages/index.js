@@ -13,12 +13,12 @@ const CSV_URL =
 
 export default function Home() {
   const [pathCoordinates, setPathCoordinates] = useState([]);
-  const [defaultCenter, setDefaultCenter] = useState([0, 0]); // Initialize with [0, 0] or any placeholder
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [currentIndex, setCurrentIndex] = useState(0); // Track current index for animation
-  const [animationSpeed, setAnimationSpeed] = useState(1); // Animation speed multiplier
-  const [isPlaying, setIsPlaying] = useState(false); // State for play/pause
-  const [maxIndex, setMaxIndex] = useState(0); // Maximum index for seek bar
+  const [defaultCenter, setDefaultCenter] = useState([0, 0]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [animationSpeed, setAnimationSpeed] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [maxIndex, setMaxIndex] = useState(0);
 
   useEffect(() => {
     async function loadPath() {
@@ -32,13 +32,13 @@ export default function Home() {
         }));
         setPathCoordinates(coordinates);
         if (coordinates.length > 0) {
-          setDefaultCenter([coordinates[0].lat, coordinates[0].lng]); // Set the default center to the first coordinate
-          setMaxIndex(coordinates.length - 1); // Set maximum index for seek bar
+          setDefaultCenter([coordinates[0].lat, coordinates[0].lng]);
+          setMaxIndex(coordinates.length - 1);
         }
       } catch (error) {
         console.error("Error fetching and parsing CSV:", error);
       } finally {
-        setLoading(false); // Set loading state to false when data fetching is complete
+        setLoading(false);
       }
     }
 
@@ -46,43 +46,36 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Start animation if pathCoordinates are loaded and isPlaying is true
     if (isPlaying && pathCoordinates.length > 0) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => {
-          // Increment index until reaching the end
           if (prevIndex < pathCoordinates.length - 1) {
             return prevIndex + 1;
           } else {
-            setIsPlaying(false); // Stop animation when reaching the end
+            setIsPlaying(false);
             return prevIndex;
           }
         });
-      }, 50 / animationSpeed); // Adjust interval speed based on animation speed
+      }, 50 / animationSpeed);
 
-      return () => clearInterval(interval); // Cleanup interval on unmount
+      return () => clearInterval(interval);
     }
   }, [isPlaying, pathCoordinates, animationSpeed]);
 
-  // Play/pause functionality
   const togglePlayPause = () => {
     setIsPlaying((prevIsPlaying) => !prevIsPlaying);
   };
 
-  // Function to handle animation speed change
   const changeSpeed = (speed) => {
     setAnimationSpeed(speed);
   };
 
-  // Function to handle seek bar change
   const handleSeek = (event) => {
     const newIndex = parseInt(event.target.value);
     setCurrentIndex(newIndex);
   };
 
-  // Convert Unix timestamp to human-readable date and time
   const formatDateTime = (unixTimestamp) => {
-    // Convert milliseconds to seconds
     const timestampInSeconds = unixTimestamp / 1000;
     const date = new Date(timestampInSeconds * 1000);
     const formattedDate = date.toLocaleDateString(); // Format date
@@ -90,7 +83,6 @@ export default function Home() {
     return { date: formattedDate, time: formattedTime };
   };
 
-  // Conditional rendering based on loading state
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -180,7 +172,7 @@ export default function Home() {
                       <Polyline
                         positions={pathCoordinates
                           .slice(0, currentIndex + 1)
-                          .map((coord) => [coord.lat, coord.lng])} // Only show coordinates up to currentIndex
+                          .map((coord) => [coord.lat, coord.lng])}
                         color="red"
                       />
                     </>

@@ -10,18 +10,18 @@
 }
 
 .headerContainer {
-
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   width: 100%;
-
 }
 
 .headerTitle {
   font-size: 1.6em;
   font-weight: bold;
   margin: 0;
+  text-align: center;
 }
 
 .headerLogo {
