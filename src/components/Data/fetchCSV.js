@@ -6,7 +6,7 @@ async function fetchCSV(url) {
       download: true,
       header: true,
       complete: function (results) {
-        resolve(results.data);
+        resolve(results.data); //for readabilty
       },
       error: function (error) {
         reject(error);
